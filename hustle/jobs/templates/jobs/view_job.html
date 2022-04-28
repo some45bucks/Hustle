@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load blacklist %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<!--View Job-->
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        tr {
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+    <title>View Job</title>
+</head>
+<div class="d-flex justify-content-center">
+    <div class="card col-12 col-md-9 col-lg-8 col-xl-7 col-xxl-6 m-5">
+        <div class="card-header bg-hustle-secondary text-white">
+            <h2 style="display: flex; flex-direction: row">
+                <h2 class="my-2" style="float: left">Job #{{ job.id }}</h2>
+                <h2><span class="badge rounded-pill bg-brown my-2 border border-white" style="float: right">Customer:
+				{% include 'main/user_link.html' with person=job.customer %}</span></h2>
+            </h2>
+        </div>
+        <div class="card-body justify-content-center">
+	    {% if job.cancelled %}
+	    <center>
+		<h1 style="color:red">Job Cancelled</h1>
+	    </center>
+	    {% endif %}
+            <div>
+                <div class="m-2 bg-light p-4 rounded border border-hustle">
+                    <h3 class="pb-4">Job Details</h3>
+                    <p>Type: {{ job.type }}</p>
+		    <p>Time Estimate: {{ job.time_estimate|floatformat:"-2" }} hour{{ job.time_estimate|pluralize }}</p>
+                    <p>Completion Window Start: {{ job.completion_window_start }}</p>
+                    <p>Completion Window End: {{ job.completion_window_end }}</p>
+                    {% if job.claimed_user != null and job.claimed_user == user %}
+                        <p>Address: {{ job.customer.customer_data.street }}, {{ job.customer.customer_data.street2 }}, {{ job.customer.customer_data.city }}, {{ job.customer.customer_data.state }}, {{ job.customer.customer_data.zip_code }}</p>
+                    {% else %}
+                        <p>Zip Code: {{ job.zip_code }}</p>
+                    {% endif %}
+
+
+                </div>
+                {% if job.claimed_user %}
+                    <div class="m-2 bg-light p-4 rounded border border-hustle">
+                        {% if job.claimed_user %}
+                        <div class="m-2">
+                            <p>Accepted User: {% include 'main/user_link.html' with person=job.claimed_user %}</p>
+                            <p>Accepted Bid: ${{ job.accepted_bid.bid }}</p>
+                            <p>Scheduled Time: {{ job.accepted_bid.date_time }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                {% if job.accepted_bid.user == user and not job.complete %}
+                <div class="m-2">
+                    <a class="btn btn-hustle-secondary m-1" onclick="return confirm('Are you sure?')" href="{% url 'jobs:complete job' job.id %}">Mark Complete</a>
+                </div>
+                {% elif job.complete %}
+
+		            <center>
+                        <h5 class="m-2 text-{{ job.get_state.1 }}">Job Completed</h5>
+
+                        {% if user.customer_data %}
+
+                            <form method="post" action="{{ url }}/main/sendTip/{{ job.claimed_user.id }}/" >
+                                {% csrf_token %}
+
+                                <div>
+                                    <div class="m-2">
+                                        {{ money_form.money|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <input class="btn btn-hustle" type="submit" value="Give Optional Tip">
+                                </div>
+                            </form>
+                        {% endif %}
+                    </center>
+          {% if job.accepted_bid.user == user %}
+                <center><a class="btn btn-hustle" id="survey" href="{{ url }}/surveys/create/{{ job.id }}">Complete Survey</a></center>
+                {% endif %}
+
+                {% endif %}
+            </div>
+            <div>
+                {% if job.get_state.0 == "Open" %}
+                <div class="m-2 bg-light p-4 rounded border border-hustle">
+                    <h2>Current Bids</h2>
+                    <table class="table table-sm m-4">
+                        <tr>
+                            <th>Bid</th>
+                            <th>User</th>
+                            <th>Avg. Rating</th>
+                            <th>Date/Time</th>
+                        </tr>
+                        {% for bid in bids %}
+                        <tr>
+                            <td>
+                                ${{ bid.bid }}
+                            </td>
+                            <td>
+                                {% include 'main/user_link.html' with person=bid.user %}
+                            </td>
+                            <td>
+                                {{ bid.get_worker_rating|floatformat:"1" }} / 5.0
+                            </td>
+                            <td>
+                                {{ bid.date_time }}
+                            </td>
+                            <td>
+				{% if user.customer_data %}
+                                <form method="post" action="{{ url }}/jobs/accept_bid/{{ job.id }}/{{ bid.id }}">
+                                    {% csrf_token %}
+                                    <input class="btn btn-hustle" type="submit" value="Accept"
+					{% if bid.user|is_blacklisted_by:user %}
+					onchange="return confirm('Are you sure? You have this user blacklisted.')"
+					{% endif %}
+				    ></input>
+                                </form>
+				{% elif bid.user == user %}
+				<form method="post" action="{% url 'jobs:rescind bid' job.id bid.id %}">
+				    {% csrf_token %}
+				    <input class="btn btn-hustle" type="submit" value="Rescind"></input>
+				</form>
+				{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+		{% if user.worker_data %}
+                <div class="m-2 bg-light p-4 rounded border border-hustle">
+                    <div class="">
+                        <h5>Submit A New Bid</h5>
+			<form method="POST" action="{% url 'jobs:bid job' job.id %}">
+                            {% csrf_token %}
+                            <div class="fieldWrapper">
+                                {{ job_bid_form.bid|as_crispy_field }}
+                                {{ job_bid_form.date_time|as_crispy_field }}
+                            </div>
+                            <div class=" my-2">
+                                <button class="btn btn-hustle" type="submit"
+					{% if job.customer|is_blacklisted_by:user %}
+					onclick="return confirm('Are you sure you want to bid? You have this user blacklisted.')"
+					{% endif %}
+					>Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+		{% endif %}
+                {% elif not job.complete %}
+                    {% if time_left > 0 %}
+		    <a class="btn btn-warning m-1" href="{% url 'jobs:cancel accept bid' job.id %}" popover="hover" data-bs-content="{{time_left}} hours left">Cancel Accepted Bid</a>
+                    {% else %}
+                    <a class="btn text-light bg-secondary m-1" popover="focus hover" title="Cannot Cancel" data-bs-content="You are too close to the completion time to drop out on this bid">Cancel Accepted Bid</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% if job.customer == user and not job.cancelled %}
+            <div class="m-2 bg-light p-4 rounded border border-hustle row">
+                <div class="col-4">
+		    {% if job.complete or time_left <= -24 %}
+		    <a class="btn btn-outline-hustle w-100" href="{% url 'complaints:create_for' job.id %}">File A Complaint</a>
+		    {% else %}
+		    <a class="btn text-light bg-secondary w-100" popover="focus hover" title="Cannot File Complaint" data-bs-content="Job must be completed, or 24 hours after scheduled completion time. ({{ time_left|add:"24" }} more hours)" data-bs-placement="left">File a Complaint</a>
+		    {% endif %}
+                </div>
+                <div class="col-4">
+                    {% if job.complete %}
+                    <a class="btn btn-hustle w-100" href="{% url 'reviews:create' worker_id=job.claimed_user.id %}">Review Worker</a>
+                    {% endif %}
+                </div>
+
+                {% if not job.accepted_bid %}
+                <div class="col-4">
+                    <form class="w-100" method="post" action="{{ url }}/jobs/cancel_job/{{ job.id }}">
+                        {% csrf_token %}
+                        <input class="w-100 btn btn-danger" type="submit" value="Cancel Job"></input>
+                    </form>
+                </div>
+                {% else %}
+                <div class="col-4">
+                    <a class="w-100 btn text-light bg-secondary" popover="focus hover" title="Cannot Cancel" data-bs-content="You must cancel the accepted bid in order to cancel the job.">Cancel Job</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	document.querySelectorAll('[popover]').forEach(el => { el.setAttribute("data-bs-trigger", el.getAttribute("popover")); el.setAttribute("popover", null); el.setAttribute("data-bs-toggle", "popover"); el.setAttribute("tabindex", "0"); });
+	window.onload = () => {
+		var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+		var popoverList = popoverTriggerList.map(el => new bootstrap.Popover(el))
+	}
+</script>
+
+{% endblock %}

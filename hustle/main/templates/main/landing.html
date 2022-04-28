@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+<div class="row my-4">
+  <div class="col-9">
+    <div class="card mx-1 border-hustle ">
+      <div class="card-header bg-brown text-white">
+        <h1>Welcome to Hustle</h1>
+      </div>
+      <div class="card-body">
+        <h3>Our mission is to maintain our communities.</h3>
+        <p>Hustle is a place where customers and workers come together to keep our
+          communities well-kept. Customers can post jobs for others in the community to complete, and workers in the
+          community submit bids until one is accepted, at which point the work is executed. If you need your
+          <strong>lawn moved</strong>, your <strong>leaves raked</strong>, or even your <strong>driveway
+            shoveled</strong>, there is somebody in the community waiting to do it for you.</p>
+            <p>By maintaing our communities together, we develop relationships
+          with those who live near us in ways that we haven't ever done before.</p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ornare aenean euismod elementum nisi quis eleifend quam adipiscing vitae. Dictum fusce ut
+          placerat orci. Porttitor lacus luctus accumsan tortor posuere ac. Viverra mauris in aliquam sem fringilla ut
+          morbi tincidunt augue. Diam maecenas ultricies mi eget mauris pharetra et. Velit aliquet sagittis id
+          consectetur. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Dui sapien eget mi proin sed libero
+          enim. Ut tristique et egestas quis ipsum suspendisse. Libero enim sed faucibus turpis in. Ut sem nulla
+          pharetra diam.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="card mx-2 border-hustle text-center">
+      <div class="card-header bg-brown text-white">
+        <h1>Get To Work!</h1>
+      </div>
+      <div class="card-body">
+        <a class="btn btn-hustle w-100" href="{{ url }}/main/register">Register a New Account</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row my-5">
+  <div class="col-6 px-5">
+    <div class="card bg-hustle-secondary text-white">
+      <div class="card-header">
+        <h2><strong>Workers</strong></h2><strong>Follow the instructions below to start bidding on jobs in your
+          area!</strong>
+      </div>
+    </div>
+    <div id="tutorialWorkerCaptions" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Create an Account"></button>
+        <button type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide-to="1"
+          aria-label="Find a Job"></button>
+        <button type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide-to="2"
+          aria-label="Submit a Bid"></button>
+        <button type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide-to="3"
+          aria-label="CelebrateWorker"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'register.png' %}" class="d-block w-100">
+          </div>
+          <div class="carousel-caption d-none d-md-block translucent text-black">
+            <h5 class="">1. Create an account</h5>
+            <p class="">On the right side of this page, click "Register a New Account" and create an account as a <i>worker</i>.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'findJob.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5 class="">2. Find a Job</h5>
+              <p class="">Find a job near you using your zip code.</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'submitBid.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5 class="">3. Submit a Bid</h5>
+              <p class="">Given the job description, how much are you willing to do the job for? Submit a bid!</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'viewMyBids.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5 class="">4. Celebrate!</h5>
+              <p class="">With your first bid submitted, you're on your way to becoming a Hustle pro!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#tutorialWorkerCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  <div class="col-6 px-5">
+    <div class="card bg-hustle-secondary text-white">
+      <div class="card-header">
+        <h2><strong>Customers</strong></h2><strong>Follow the instructions below to start posting jobs!</strong>
+      </div>
+    </div>
+    <div id="tutorialCustomerCaptions" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#tutorialCustomerCaptions" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Create an Account"></button>
+        <button type="button" data-bs-target="#tutorialCustomerCaptions" data-bs-slide-to="1"
+          aria-label="Find a Job"></button>
+        <button type="button" data-bs-target="#tutorialCustomerCaptions" data-bs-slide-to="2"
+          aria-label="Submit a Bid"></button>
+        <button type="button" data-bs-target="#tutorialCustomerCaptions" data-bs-slide-to="3"
+          aria-label="Celebrate"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'register.png' %}" class="d-block w-100">
+          </div>
+          <div class="carousel-caption d-none d-md-block translucent text-black">
+            <h5 class="">1. Create an account</h5>
+            <p class="">On the right side of this page, click "Register a New Account" and create an account as a <i>customer</i>.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'postJob.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5 class="">2. Post a Job</h5>
+              <p class="">Find some work you need done, and fill out the job creation form with details of the job.</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'viewBids.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5 class="">3. Accept a Bid</h5>
+              <p class="">After some time, you'll have a selection of bids to choose from. You choose who does the work - feel
+                free to pick the lowest bidder, the most well-reviewed, or simply someone you know!</p>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="img-border bg-hustle rounded">
+            <img src="{% static 'acceptBid.png' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block translucent text-black">
+              <h5>4. Celebrate!</h5>
+              <p>With your first job completed, you're on your way to becoming a Hustle pro!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#tutorialCustomerCaptions"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#tutorialCustomerCaptions"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row my-4">
+  <div class="col-12">
+    <div class="rounded border bg-brown text-white p-2 mx-3 text-center">
+      <h1>Don't take our word for it</h1>
+    </div>
+    <div id="carouselExampleIndicators" class="carousel carousel-dark slide my-3" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+          aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+          aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-9">
+              <div class="card text-center">
+                <div class="card-header">
+                  <h3>John Doe, joined 2015</h3>
+                </div>
+                <div class="card-body pb-5">
+                  <blockquote class="blockquote mb-0">
+                    <p>"I own a business - I'm a busy guy with a lot on my mind, and I don't always have time to keep up
+                      with
+                      my yard. I trust Hustle to connect me with people who can maintain my property throughout the
+                      year."
+                    </p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-9">
+              <div class="card text-center">
+                <div class="card-header">
+                  <h3>Jimmy Doe, joined 2017</h3>
+                </div>
+                <div class="card-body pb-5">
+                  <blockquote class="blockquote mb-0">
+                    <p>"I was hoping to save up some extra money during the summer so I could do all the things I want
+                      to
+                      do
+                      in the school year. I was having a hard time finding opportunities to make money until I came
+                      accross
+                      this website! Hustle is great because when I'm available, I can work. But I'm not obligated to the
+                      same commitment as a regular job."
+                    </p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-9">
+              <div class="card text-center">
+                <div class="card-header">
+                  <h3>Grandpa Doe, joined 2013</h3>
+                </div>
+                <div class="card-body pb-5">
+                  <blockquote class="blockquote mb-0">
+                    <p>"I love my yard but just don't have the energy to give it the attention it needs. Fortunately,
+                      I've
+                      been able to trust the community to help me get the work done. There's plenty of young people
+                      around
+                      the neighborhood looking for work and I'm happy to provide that."
+                    </p>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row my-5"></div>
+<div class="row">
+  <div class="col-2"></div>
+  <div class="col-8">
+    <div class="m-3">
+      <div class="card text-center">
+        <div class="card-header bg-hustle-winter border border-white text-white">
+          <h1>We do winter!</h1>
+        </div>
+        <div class="card-body">
+          <p>We take care of your property maintenance in the winter, as well! Post jobs for others to shovel your
+            driveway, shovel your widewalks, or melt the ice on your walkways.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-3"></div>
+</div>
+
+{% endblock %}

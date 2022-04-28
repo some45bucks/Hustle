@@ -1,0 +1,2 @@
+{% load blacklist %}
+<a class="link-hustle{% if person|is_blacklisted_by:user %} blacklisted{% endif %}" href="{% url 'main:otherProfile' person.id %}">{{ person.username }}</a>{% if person|is_blacklisted_by:user %}<span class="badge bg-dark" style="float:right;margin-left:1em">Blacklisted</span>{% endif %}

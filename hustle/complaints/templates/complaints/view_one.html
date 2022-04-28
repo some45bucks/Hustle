@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+<!--View Complaint-->
+<div class="d-flex justify-content-center container-sm">
+  <div class="card m-5 w-75">
+    <div class="card-header bg-hustle-secondary text-white">
+      <h5 class="my-2" style="float: left">Complaint #{{ complaint.id }}</h5>
+      <h5><span class="badge rounded-pill bg-{{ complaint.get_state.1 }} my-2" style="float: right">{{ complaint.get_state_display }}</span></h5>
+    </div>
+    <div class="card-body">
+      <p id="created_date"><strong>Created On: </strong>{{ complaint.create_date }}</p>
+        <div>
+	  <strong>Requested From: </strong>{% include 'main/user_link.html' with person=complaint.user %}<br>
+          <strong>Reason: </strong>{{ complaint_reason }}<br>
+          <strong>Description: </strong>{{ complaint.description }}<br>
+        </div>
+        {% if complaint_url %}
+            <div>
+		<strong>Attached Image:</strong><br>
+                <img src="{{ complaint_url }}" style="width:100%"/>
+            </div>
+        {% endif %}
+	{% if user.is_superuser %}
+      {% if complaint.state == "open" %}
+        <button class="btn btn-hustle mb-2" id="reimburse_button">Reimburse</button>
+        <a class="btn btn-outline-secondary mb-2" href="{{ url }}/complaints/close/{{ complaint.id }}">Mark As Closed</a>
+      {% elif complaint.state == "closed" %}
+        <a class="btn btn-outline-secondary mb-2" href="{{ url }}/complaints/open/{{ complaint.id }}">Re-Open</a>
+      {% endif %}
+      <div id="reimbursement_info" class="border border-secondary rounded" style="display: none;">
+        <div class="m-4">
+          <h3 style="text-align: center;">Confirm Reimbursement</h3>
+	  <p style="text-align: center;">By confirming, you are depositing ${{ complaint.job.accepted_bid.bid }} into the customer's account and marking this complaint as closed.</p>
+          <a class="btn btn-warning w-100 m-1" id="confirmReimbursementButton" href="{{ url }}/complaints/reimburse/{{ complaint.id }}">Confirm</a>
+          <button class="btn btn-danger w-100 m-1" id="cancelReimburseButton">Cancel</button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if user.is_superuser %}
+<script src="{% static 'complaints/complaints.js' %}"></script>
+{% endif %}
+
+{% endblock %}

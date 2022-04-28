@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+<!--View Survey-->
+<div class="d-flex justify-content-center container-sm">
+  <div class="card m-5 w-75">
+    <div class="card-header">
+      <h5 class="my-2" style="float: left">Survey #{{ survey.id }}</h5>
+  </div>
+    <div class="card-body">
+      <p id="created_date"><strong>Created On: </strong>{{ survey.create_date }}</p>
+      <p id="content">{{ survey.duration_notes }}</p>
+      <p id="content">{{ survey.complexity_notes }}</p>
+      <p id="content">{{ survey.notes }}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

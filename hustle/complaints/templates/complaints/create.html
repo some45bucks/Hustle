@@ -1,0 +1,11 @@
+{% extends "create.html" %}
+
+{% block header %}
+<h2 class="my-2" style="float: left">File a Complaint</h2>
+{% endblock %}
+
+{% block buttons %}
+<button class="btn btn-success my-2" type="submit">Submit</button>
+<a class="btn btn-outline-danger my-2" href="{% url 'complaints:view' %}" onclick="return confirm('Are you sure you want to discard this complaint?')">Discard</a>
+{% endblock %}
+

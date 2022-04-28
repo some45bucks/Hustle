@@ -1,0 +1,10 @@
+{% extends "view_all.html" %}
+
+{% block header %}
+<a class="btn btn-hustle m-1" style="float: right" href="{{ url }}/jobs/view">View Jobs</a>
+{% endblock %}
+
+{% block item_card %}
+{% include "jobs/bid_card.html" with bid=item %}
+{% endblock %}
+

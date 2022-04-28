@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card order-2 order-md-0 col-12 col-md-4 col-xl-3">
+    <div class="card-header">
+	<h4 style="display: inline-block">Filter</h4>
+    </div>
+    <div class="card-body" id="filterBody">
+	<form action="" id="filterForm" onchange="something_changed(this, event)">
+	    <h5>State</h5>
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="radio" id="anyFilter" name="state"
+			value="any" {% if "any" in queries.state %}checked{% endif %} />
+		<label class="form-check-label" for="anyFilter"> Any </label>
+	    </div>
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="radio" id="openFilter" name="state"
+		        value="open" {% if "open" in queries.state %}checked{% endif %} />
+		<label class="form-check-label" for="openFilter"> Open </label>
+	    </div>
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="radio" id="acceptedFilter" name="state"
+			value="accepted" {% if "accepted" in queries.state %}checked{% endif %} />
+		<label class="form-check-label" for="acceptedFilter"> Accepted </label>
+	    </div>
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="radio" id="completedFilter" name="state"
+		        value="completed" {% if "completed" in queries.state %}checked{% endif %} />
+		<label class="form-check-label" for="completedFilter"> Completed </label>
+	    </div>
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="radio" id="cancelledFilter" name="state"
+		        value="cancelled" {% if "cancelled" in queries.state %}checked{% endif %} />
+		<label class="form-check-label" for="cancelledFilter"> Cancelled </label>
+	    </div>
+	    <h5 class="mt-3">Zip Codes</h5>
+	    <div id="zip_group">
+	    {% for zip_query in queries.zip_code %}
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="zip_{{zip_query}}" name="zip_code"
+			value="{{zip_query}}" checked onchange="toggle_zip_code(this)" />
+		<label class="form-check-label" for="zip_{{zip_query}}"> {{zip_query}} </label>
+	    </div>
+	    {% endfor %}
+	    </div>
+	    <div class="form-group">
+		<input style="display:inline-block;width:10em" class="form-control" type="number" id="zip_new" placeholder="New Zip Code" onkeypress="new_zip_keypress(event)" />
+	    	<button style="display:inline-block;margin-bottom:2pt" type="button" class="btn btn-outline-hustle" onclick="add_new_zip()">Add</button>
+	    </div>
+	    <h5 class="mt-3">Work Type</h5>
+	    {% for work_type in work_types %}
+	    <div class="form-check form-switch">
+		<input class="form-check-input" type="checkbox" id="wt_{{ work_type.type }}" name="type"
+			value="{{ work_type.type }}" {% if work_type.type in queries.type %}checked{% endif %} />
+		<label class="form-check-label" for="wt_{{ work_type.type }}"> {{work_type.type}} </label>
+	    </div>
+	    {% endfor %}
+	    <h5 class="mt-3">Time Estimate</h5>
+	    <div class="form-group">
+		<input style="display:inline-block;width:5em" class="form-control" type="number" id="estimate_min" name="estimate_min" placeholder="Min" value="{{ queries.estimate_min.0 }}" onchange="input_changed(this)" />
+		-
+		<input style="display:inline-block;width:5em" class="form-control" type="number" id="estimate_max" name="estimate_max" placeholder="Max" value="{{ queries.estimate_max.0 }}" onchange="input_changed(this)" />
+	    </div>
+	    <h5 class="mt-3">Completion Window</h5>
+	    <div class="form-group">
+		<h6>Start Time</h6> 
+		<input style="display:inline-block;width:fit-content" class="form-control" type="date" id="start_time_min" name="start_time_min" placeholder="Min" value="{{ queries.start_time_min.0 }}" onchange="input_changed(this)" />
+		-
+		<input style="display:inline-block;width:fit-content" class="form-control" type="date" id="start_time_max" name="start_time_max" placeholder="Max" value="{{ queries.start_time_max.0 }}" onchange="input_changed(this)" />
+	    </div>
+	    <div class="form-group">
+		<h6>End Time</h6>
+		<input style="display:inline-block;width:fit-content" class="form-control" type="date" id="end_time_min" name="end_time_min" placeholder="Min" value="{{ queries.end_time_min.0 }}" onchange="input_changed(this)" />
+		-
+		<input style="display:inline-block;width:fit-content" class="form-control" type="date" id="estimate_max" name="end_time_max" placeholder="Max" value="{{ queries.end_time_max.0 }}" onchange="input_changed(this)" />
+	    </div>
+	    <button type="submit" class="mt-4 btn btn-secondary" id="filterSubmit">Update Filter</button>
+	</form>
+    </div>
+</div>
+<div class="card col-12 col-md-8 col-xl-9">
+    <div class="card-header">
+        <h2 style="display: inline-block">All Jobs</h2>
+    </div>
+    <div class="card-body">
+        <!--Job Cards-->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+          {% for job in jobs %}
+              {% include "jobs/job_card.html" with job=job %}
+          {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	function new_zip_keypress(event) {
+		if (event.keyCode == 13) {
+			event.preventDefault();
+			add_new_zip();
+		}
+	}
+	function append_zip_code(value) {
+		var group = document.getElementById("zip_group");
+		
+		var div = document.createElement("div");
+		div.className = "form-check form-switch";
+
+		var input = document.createElement("input");
+		input.type = "checkbox";
+		input.id = "zip_" + value;
+		input.name = "zip_code";
+		input.checked = true;
+		input.value = value;
+		input.className = "form-check-input";
+		input.setAttribute("onchange", "toggle_zip_code(this)");
+		input.style.backgroundColor = "#ffc107";
+		input.style.borderColor = "#b28705";
+
+		var label = document.createElement("label");
+		label.className = "form-check-label";
+		label.for = "zip_" + value;
+		label.appendChild(document.createTextNode(value));
+		
+		div.appendChild(input);
+		div.appendChild(label);
+		group.appendChild(div);
+	}
+	function toggle_zip_code(input) {
+		if (input.checked) {
+			input.name = null;
+			input.setAttribute("data-zip-code", input.value);
+			input.value = null;
+		} else {
+			input.name = "zip_code";
+			input.value = input.getAttribute("data-zip-code");
+			input.setAttribute("data-zip-code", null);
+		}
+		something_changed(input.form)
+	}
+	function add_new_zip() {
+		input = document.getElementById("zip_new");
+		if (input.value.match(/^[0-9]{5}$/g)) {
+			append_zip_code(input.value);
+			input.value = "";
+			something_changed(input.form);
+		} else {
+			input.style.backgroundColor = "red";
+			window.setTimeout(() => {input.style.backgroundColor = null;}, 100);
+		}
+	}
+	function something_changed(form) {
+		var hasChanges = false;
+		document.querySelectorAll("input[value]").forEach(el => {
+			if (el.value == el.getAttribute("value")) {
+				el.style.backgroundColor = null;
+				el.style.borderColor = null;
+			} else {
+				el.style.backgroundColor = "#ffc107";
+				el.style.borderColor = "#b28705";
+				hasChanges = true;
+			}
+		});
+		document.querySelectorAll("[type=checkbox][checked],[type=radio][checked]").forEach(el => {
+			if (!el.checked) {
+				el.style.backgroundColor = "#ffc107";
+				el.style.borderColor = "#b28705";
+				hasChanges = true;
+			} else {
+				el.style.backgroundColor = null;
+				el.style.borderColor = null;
+			}
+		});
+		document.querySelectorAll("[type=checkbox]:not([checked]),[type=radio]:not([checked])").forEach(el => {
+			if (el.checked) {
+				el.style.backgroundColor = "#ffc107";
+				el.style.borderColor = "#ffc107";
+				hasChanges = true;
+			} else {
+				el.style.backgroundColor = null;
+				el.style.borderColor = null;
+			}
+		});
+		if (hasChanges) {
+			document.getElementById("filterSubmit").className = "mt-4 btn btn-warning";
+		} else {
+			document.getElementById("filterSubmit").className = "mt-4 btn btn-secondary";
+		}
+	}
+	function input_changed(input) {
+		something_changed(input);
+	}
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "view_all.html" %}
+
+{% block header %}
+{% if user.customer_data %}
+<a class="btn btn-secondary m-1" style="float: right" href="{{ url }}/jobs/create">Create New</a>
+{% endif %}
+{% endblock %}
+
+{% block item_card %}
+{% include "jobs/job_card.html" with job=item %}
+{% endblock %}
+

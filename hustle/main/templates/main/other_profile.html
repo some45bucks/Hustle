@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+<!--Register-->
+
+
+<!--Register-->
+<div class="row my-4">
+    {% if view_user.customer_data %}
+    <div class="order-2 order-lg-0 col-12 col-sm-6 col-md-12 col-lg-3 mb-4">
+        <div class="card mx-2">
+            <div class="card-header bg-brown text-white">
+                <h2 class="text-center">Worker Surveys</h2>
+            </div>
+            <div class="card-body scroll">
+                <p><strong>Note: </strong>For the ratings in these surveys, workers were asked to use the following
+                    scale:</p>
+                <ul>
+                    <li>1 - Much shorter/easier than customer predicted</li>
+                    <li>5 - As long/difficult as customer predicted</li>
+                    <li>10 - Much longer/harder than customer predicted</li>
+                </ul>
+                {% for survey in surveys %}
+                <div class="card mx-2 mb-2">
+                    <div class="card-header text-center">
+                        <h2 class="text-center">Job #{{ survey.job.id }}</h2>
+                        <strong>Type: {{ survey.job.type }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Duration Rating: </strong>{{ survey.duration_rating }}</p>
+                        <p><strong>Duration Notes: </strong>{{ survey.duration_notes }}</p>
+                        <p><strong>Difficulty Rating: </strong>{{ survey.complexity_rating }}</p>
+                        <p><strong>Difficulty Notes: </strong>{{ survey.complexity_notes }}</p>
+                        <p><strong>Other Notes: </strong>{{ survey.notes }}</p>
+                        <div><strong>Completed By: {% include 'main/user_link.html' with person=survey.job.claimed_user %}</strong></div>
+                        <p>{{ survey.create_date }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% elif view_user.worker_data %}
+    <div class="order-2 order-lg-0 col-12 col-sm-6 col-md-12 col-lg-3 mb-4">
+        <div class="card text-center mx-2">
+            <div class="card-header bg-brown text-white mb-4">
+                <h2>Customer Reviews</h2>
+            </div>
+            <div class="card-body scroll">
+                {% for review in reviews %}
+                <div class="card mx-4 mb-4">
+                    <div class="card-header text-center">
+                        <h2 class="text-center">Rating: {{ review.rating }}/5 </h2>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ review.comments }}</p>
+                        <div><strong>Submitted By: {% include 'main/user_link.html' with person=review.reviewer %}</strong></div>
+                        <p>Date: {{ review.create_date }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-12 col-md-8 col-lg-6 mb-4">
+        <div class="card mx-2">
+            <div class="card-header bg-brown text-white">
+                <h1 class="my-2" style="float: left">{{ view_user.username }}</h1>
+                {% if bl %}
+                <h5><span class="badge rounded-pill bg-dark my-4" style="float: right">Blacklisted</span></h5>
+                {% endif %}
+            </div>
+            <div class="card-body justify-content-center">
+                <h3>
+                    <p>First Name: {{ view_user.first_name }}</p>
+                    <p>Last Name: {{ view_user.last_name }}</p>
+                    <p>Email: {{ view_user.email }}</p>
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card mx-2">
+            <div class="card-header bg-brown text-white justify-content-center">
+                <h1>
+                    Blacklist
+                </h1>
+            </div>
+            <div class="m-4">
+                {% if bl %}
+                <a class="btn btn-secondary" href="{% url 'main:blackListUser' view_user.id %}">
+                    Undo BlackList {{ view_user.username }}
+                </a>
+                {% else %}
+                <a class="btn btn-dark" href="{% url 'main:blackListUser' view_user.id %}">
+                    BlackList {{ view_user.username }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

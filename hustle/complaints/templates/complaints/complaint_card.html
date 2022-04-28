@@ -1,0 +1,25 @@
+
+{% load blacklist %}
+
+<div class="col">
+   <div class="card m-1 border-{{ complaint.get_state.1|unless:user|blacklists:complaint.user }}">
+      <div class="card-header">
+          <h5 class="my-2" style="float: left">Complaint #{{ complaint.id }} <div> {% include 'main/user_link.html' with person=complaint.user %}</div> </h5>
+	  <a class="btn btn-{{ complaint.get_state.1|unless:user|blacklists:complaint.user }} m-1" style="float: right" href="{{ url }}/complaints/view/{{ complaint.id }}">
+		  {% if user.is_superuser %}
+		  Review
+		  {% else %}
+		  View
+		  {% endif %}
+	  </a>
+      </div>
+      <div class="card-body">
+        <p id="created_date{{ complaint.id }}"><strong>Created:</strong> {{ complaint.create_date }}</p>
+        <p id="reason{{ complaint.id }}"><strong>Reason:</strong> {{ complaint.get_reason_display }}</p>
+	<p id="description{{ complaint.id }}"><strong>Description:</strong> {{ complaint.description|truncatewords:14 }}</p>
+      </div>
+      <div class="card-footer">
+	<p id="state{{ complaint.id }}" class="text-{{ complaint.get_state.1|unless:user|blacklists:complaint.user }}"><strong>State:</strong> {{ complaint.get_state.0 }}</p>
+      </div>
+    </div>
+  </div>

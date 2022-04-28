@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card m-3 col-11 col-md-9">
+    <div class="card-header">
+	{% if all %}
+	<h2 style="display: inline-block">All {{ type }}</h2>
+	{% else %}
+	<h2 style="display: inline-block">My {{ type }}</h2>
+	{% endif %}
+	{% block header %}{% endblock %}
+    </div>
+    <div class="card-body">
+        <!--Job Cards-->
+        <div class="accordion">
+          {% for item_group in item_groups %}
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="{{ item_group.0 }}_section_header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ item_group.0 }}_section" aria-expanded="false" aria-controls="{{ item_group.0 }}_section">
+                <strong>{{ item_group.0|capfirst }} ({{ item_group.1.count }})</strong>
+	      </button>
+            </h2>
+	    <div id="{{ item_group.0 }}_section" class="accordion-collapse collapse" aria-labelledby="{{ item_group.0 }}_section_header">
+              <div class="accordion-body">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                  {% for item in item_group.1 %}
+		  {% block item_card %}{% endblock %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

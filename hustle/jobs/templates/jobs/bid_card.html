@@ -1,0 +1,22 @@
+
+<div class="col">
+	<div class="card m-1 border-{{ bid.get_state.1 }}">
+		<div class="card-header">
+			<h5 class="my-2" style="float: left">Bid #{{ bid.id }} <div> {% include 'main/user_link.html' with person=bid.user %}</div> </h5>
+			{% if bid.selected_job %}
+			<a class="btn btn-{{ bid.get_state.1 }} m-1" style="float: right" href="{{ url }}/jobs/view/{{ bid.selected_job.id }}">View</a>
+			{% endif %}
+		</div>
+		<div class="card-body">
+			<p id="type{{ bid.id }}"><strong>Amount:</strong> {{ bid.bid }}</p>
+			<p id="time_estimate{{ bid.id }}"><strong>Date:</strong> {{ bid.date_time }}</p>
+		</div>
+		<div class="card-footer">
+			{% if bid.get_state.0 == "Active" %}
+			<a class="btn btn-{{ bid.get_state.1 }}" id="review" href="{% url 'jobs:rescind bid' bid.selected_job.id bid.id %}">Rescind</a>
+			{% else %}
+			<p id="state{{ bid.id }}" class="text-{{ bid.get_state.1 }}"><strong>State:</strong> {{ bid.get_state.0 }}</p>
+			{% endif %}
+		</div>
+	</div>
+</div>

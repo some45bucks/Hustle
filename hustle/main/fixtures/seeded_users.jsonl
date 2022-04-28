@@ -1,0 +1,8 @@
+{"model": "auth.user","pk": 1,"fields": {"password": "pbkdf2_sha256$320000$B8DuIojJFKMesOW8pmziMv$cc/wXnfIswA85UyLk9gBC/P27A6ACHV5sVo8ETor2OU=","last_login": "2022-04-16T21:07:32.939Z","is_superuser": true,"username": "superuser","first_name": "Frederick","last_name": "Wilson","email": "somewhere@anotherplace.com","is_staff": true,"is_active": true,"date_joined": "2022-03-31T18:20:22.425Z","groups": [3],"user_permissions": []}}
+{"model": "auth.user","pk": 2,"fields": {"password": "pbkdf2_sha256$320000$w069pL5iR12p8ijcsDE2Bq$+PHr4iDk6oTu+U86jzfxKRUCK1JKrIt02LKdTZnRa1w=","last_login": "2022-04-16T21:24:07.421Z","is_superuser": false,"username": "customer","first_name": "Some","last_name": "Customer","email": "somecustomer@gmail.com","is_staff": false,"is_active": true,"date_joined": "2022-03-31T18:28:14.633Z","groups": [2],"user_permissions": []}}
+{"model": "auth.user","pk": 3,"fields": {"password": "pbkdf2_sha256$320000$2i0CQYJDwJaPxNmpVI3UU3$ozosrZbRyR9pAcE/McsHXFs1gZHjZVCu5+ueomKHY1w=","last_login": "2022-04-14T17:02:06.033Z","is_superuser": false,"username": "worker","first_name": "Rando","last_name": "Worker","email": "randoworker@aol.com","is_staff": false,"is_active": true,"date_joined": "2022-03-31T18:33:07Z","groups": [1],"user_permissions": []}}
+{"model": "main.userdata","pk": 1,"fields": {"phone_number": "(000) 000-0000","money": "1.20"}}
+{"model": "main.userdata","pk": 2,"fields": {"phone_number": "(123) 456-7890","money": "174.00"}}
+{"model": "main.userdata","pk": 3,"fields": {"phone_number": "(234) 567-8901","money": "99625.00"}}
+{"model": "main.customerdata","pk": 2,"fields": {"street": "123 Street St.","street2": "Apt. no","city": "Somewhere","state": "ND","zip_code": "12345"}}
+{"model": "main.workerdata","pk": 3,"fields": {}}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<!--Register-->
+<div class="d-flex justify-content-center container-sm">
+    <div class="card m-5">
+        <div class="card-header bg-hustle text-white">
+            Hustle Registration
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in register_form.standard_fields %}
+                <div class="fieldWrapper">
+			{{ field|as_crispy_field }}
+                </div>
+                {% endfor %}
+
+		{% if register_form.customer_fields|length > 0 %}
+		<div id="customer_data_wrapper" class="card" style="margin-top: 1em">
+			<div class="card-header">Customer Data</div>
+			<div class="card-body">
+				{% for field in register_form.customer_fields %}
+				<div class="fieldWrapper">
+					{{ field|as_crispy_field }}
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		{% endif %}
+
+		{% if register_form.worker_fields|length > 0 %}
+		<div id="worker_data_wrapper" class="card" style="margin-top: 1em">
+			<div class="card-header">Worker Data</div>
+			<div class="card-body">
+				{% for field in register_form.worker_fields %}
+				<div class="fieldWrapper">
+					{{ field|as_crispy_field }}
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		{% endif %}
+                <div style="padding-top: 1.5em" class="justify-content-center">
+			<button disabled id="register_button" class="btn btn-hustle" type="submit">Register</button>
+                </div>
+            </form>
+            <p class="text-center">If you already have an account, <a href="/main/login">login</a> instead.</p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	function enable_register() {document.getElementById("register_button").disabled = false};
+	function show_field_type(field_type) {
+		document.querySelectorAll("#" + field_type + " input,#" + field_type + " select").forEach(el => {el.required = !el.hasAttribute("no-require");});
+		document.getElementById(field_type).hidden=false;
+	}
+	function hide_field_type(field_type) {
+		document.querySelectorAll("#" + field_type + " input,#" + field_type + " select").forEach(el => {el.required = false;});
+		document.getElementById(field_type).hidden=true;
+	}
+	function account_type_changed() {
+		for (t of account_type) {
+			if (t.checked) {
+				enable_register();
+				show_field_type(t.value + "_data_wrapper");
+			} else {
+				hide_field_type(t.value + "_data_wrapper");
+			}
+		}
+	}
+	function carry_over(input_event, length, previous, next) {
+		let value = input_event.target.value;
+		if (value.length == length) {
+			if (next) {
+				next.focus();
+			} else {
+				document.activeElement.blur();
+			}
+		} else if (value.length == 0 && previous) {
+			previous.focus();
+		} else if (value.length > length && input_event.data) {
+			input_event.target.value = input_event.target.value.substr(0, length);
+			if (next) {
+				next.focus();
+			} else {
+				document.activeElement.blur();
+			}
+		}
+	}
+	{
+		let area_code = document.querySelector("input[name='phone_number_area_code']");
+		let prefix = document.querySelector("input[name='phone_number_prefix']");
+		let line_number = document.querySelector("input[name='phone_number_line_number']");
+		area_code.oninput = (e) => {carry_over(e, 3, null, prefix);};
+		prefix.oninput = (e) => {carry_over(e, 3, area_code, line_number);};
+		line_number.oninput = (e) => {carry_over(e, 4, prefix, null);};
+	}
+	document.querySelectorAll("option:first-child").forEach(el => {el.disabled = true;});
+
+	const account_type = document.querySelectorAll("[data='account_type_radio']");
+
+	account_type.forEach(el => {el.onchange = account_type_changed});
+	account_type_changed();
+</script>
+<style>
+	input[name^='phone_number_'] {
+		width: 5em;
+		display: inline;
+		background-image: none !important;
+		padding-right: inherit !important;
+	}
+</style>
+
+{% endblock %}

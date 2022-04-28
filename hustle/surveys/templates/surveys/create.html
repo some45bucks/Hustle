@@ -1,0 +1,27 @@
+{% extends "create.html" %}
+
+{% block header %}Complete Survey : Job #{{ job.id }}{% endblock %}
+
+{% block form_block %}
+
+{% load crispy_forms_tags %}
+
+<p><strong>Note: </strong>For the ratings, please use the following scale:</p>
+<ul>
+    <li>1 - Much shorter/easier than customer predicted</li>
+    <li>5 - As long/difficult as customer predicted</li>
+    <li>10 - Much longer/harder than customer predicted</li>
+</ul>
+<form method="POST">
+    {% csrf_token %}
+    {% for field in survey_form %}
+    <div class="fieldWrapper">
+        {{ field|as_crispy_field }}
+    </div>
+    {% endfor %}
+    <div class="justify-content-center">
+        <button class="btn btn-hustle" type="submit">Submit</button>
+    </div>
+</form>
+{% endblock %}
+

@@ -1,0 +1,34 @@
+<div class="position-relative m-4">
+	<div class="progress translate-middle-y" style="height: 1.5rem;">
+		<div id="rating_bar_{{ widget.name }}" class="progress-bar bg-{{ widget.attrs.bgcolor }}" role="progressbar" style="width: 0%;" aria-valuenow="1" aria-valuemin="1" aria-valuemax="{{ max_rating }}"></div>
+	</div>
+	{% with ''|center:max_rating as range %}
+	{% for _ in range %}
+	<button id="rating_button_{{ forloop.counter }}_{{ widget.name }}" type="button" class="position-absolute top-0 translate-middle btn btn-sm btn-secondary rounded-pill"
+		style="width: fit-content; min-width:2rem; height:2rem; left: {% widthratio forloop.counter0 max_rating|add:"-1" 100 %}%" onclick="change_rating_{{ widget.name }}({{ forloop.counter }})">{{ forloop.counter }}</button>
+	{% endfor %}
+	{% endwith %}
+	<input type="hidden" id="rating_{{ widget.name }}" name="{{ widget.name }}" value="{{ widget.value }}"></input>
+</div>
+
+<script type="text/javascript">
+	function change_rating_{{ widget.name }}(value) {
+		let bar = document.getElementById("rating_bar_{{ widget.name }}");
+		let rating_buttons = [];
+		for (let i = 1; i <= {{ max_rating }}; i++) {
+			rating_buttons.push(document.getElementById("rating_button_" + i + "_{{ widget.name }}"));
+		}
+		bar.style.width = ((value - 1) * 100 / ({{ max_rating }} - 1)) + "%";
+		bar.setAttribute("aria-valuenow", value);
+		for (let i = 1; i <= value; i++) {
+			rating_buttons[i - 1].classList.add("btn-{{ widget.attrs.bgcolor }}");
+			rating_buttons[i - 1].classList.remove("btn-secondary");
+		}
+		for (let i = value + 1; i <= {{ max_rating }}; i++) {
+			rating_buttons[i - 1].classList.remove("btn-{{ widget.attrs.bgcolor }}");
+			rating_buttons[i - 1].classList.add("btn-secondary");
+		}
+		document.getElementById("rating_{{ widget.name }}").value = value;
+	}
+	change_rating_{{ widget.name }}({{ widget.value }});
+</script>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<!--Login-->
+<div class="d-flex justify-content-center container-sm">
+  <div class="card m-5">
+    <div class="card-header bg-hustle text-white">
+      Hustle Login
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        {% csrf_token %}
+        {% for field in login_form %}
+        <div class="fieldWrapper mb-2">
+          {{ field|as_crispy_field }}
+        </div>
+        {% endfor %}
+        <button class="btn btn-hustle mb-2" type="submit">Login</button>
+      </form>
+      <p class="text-center">Don't have an account? <a href="/main/register">Register today</a>!</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

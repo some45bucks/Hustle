@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+<!--View Review-->
+<div class="d-flex justify-content-center container-sm">
+  <div class="card m-5 w-75">
+    <div class="card-header">
+      <h5 class="my-2" style="float: left">Review #{{ review.id }}</h5>
+  </div>
+    <div class="card-body">
+      <p id="created_date"><strong>Created On: </strong>{{ review.create_date }}</p>
+      <p id="content">{{ review.content }}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
